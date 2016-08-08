@@ -1,0 +1,14 @@
+[package]
+name = "psqs"
+version = "0.1.0"
+authors = ["Murilo Cadanus da Costa <murilocadanus@gmail.com>"]
+
+[dependencies]
+env_logger = "0.3.4"
+log = "0.3.6"
+rusoto = {version = "0.15.3", features = ["sqs"]}
+time = "0.1.35"
+tokio = { git = "https://github.com/tokio-rs/tokio" }
+psvr_line = { git = "ssh://APKAIUBMOHEAW6LYNL3Q@git-codecommit.us-east-1.amazonaws.com/v1/repos/psvr_line", branch = "develop"}
+futures = "0.1.0"
+rustc-serialize = "0.3"
