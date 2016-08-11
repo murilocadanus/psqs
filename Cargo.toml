@@ -2,6 +2,7 @@
 name = "psqs"
 version = "0.1.0"
 authors = ["Murilo Cadanus da Costa <murilocadanus@gmail.com>"]
+description = "General equipment data interceptor and queue data producer."
 
 [dependencies]
 env_logger = "0.3.4"
@@ -11,4 +12,7 @@ time = "0.1.35"
 tokio = { git = "https://github.com/tokio-rs/tokio" }
 psvr_line = { git = "ssh://APKAIUBMOHEAW6LYNL3Q@git-codecommit.us-east-1.amazonaws.com/v1/repos/psvr_line", branch = "develop"}
 futures = "0.1.0"
+clap = "2.10.0"
+
+
 rustc-serialize = "0.3"
