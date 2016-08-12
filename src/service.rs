@@ -17,8 +17,7 @@ impl PacketService {
 		let queue_url = match equipment_type.parse::<EquipmentType>() {
 			Ok(_type) => {
 				// Create AWS SQS client using AWS env vars auth
-				let provider = ChainProvider::new();
-				let sqs = SqsClient::new(provider, Region::SaEast1);
+				let sqs = SqsClient::new(ChainProvider::new(), Region::SaEast1);
 
 				// Create a queue url request by name
 				let mut get_req = GetQueueUrlRequest::default();
@@ -28,20 +27,27 @@ impl PacketService {
 				let msg_url = match sqs.get_queue_url(&get_req) {
 					Ok(resp) => format!("{}", resp.queue_url.unwrap()),
 					Err(error) => {
-						// Create a new queue with random name
+						warn!("The Queue don't exist, {}.", error);
+
+						// Create a new queue with equipment name
 						let mut req = CreateQueueRequest::default();
 						req.queue_name = equipment_type.to_string();
 
 						// Call and verify if has a valid result
+						debug!("Creating new queue.");
 						match sqs.create_queue(&req) {
 							Ok(resp) => resp.queue_url.unwrap().to_string(),
-							Err(error) => panic!("AWS SQS Error: Can't create queue, {:?}", error),
+							Err(error) => panic!("AWS SQS Error: Can't create queue, {:?}.", error),
 						}
 					},
 				};
+				debug!("Using queue url {}.", msg_url);
+
+				msg_url
 			},
 			Err(()) => panic!("Invalid equipment type!"),
 		};
+		info!("Created PacketService handler.");
 
 		PacketService { equipment_type: equipment_type, queue_url: queue_url}
 	}
@@ -54,9 +60,10 @@ impl Service for PacketService {
 	type Fut = Box<Future<Item = Self::Resp, Error = io::Error>>;
 
 	fn call(&self, req: Self::Req) -> Self::Fut {
+		debug!("Received request {:?}.", req);
+
 		// Create AWS SQS client using AWS env vars auth
-		let provider = ChainProvider::new();
-		let sqs = SqsClient::new(provider, Region::SaEast1);
+		let sqs = SqsClient::new(ChainProvider::new(), Region::SaEast1);
 
 		// Create send message request
 		let mut send_req = SendMessageRequest::default();
@@ -65,8 +72,8 @@ impl Service for PacketService {
 
 		// Send message
 		match sqs.send_message(&send_req) {
-			Ok(message) => println!("AWS SQS Success: Sent message {:?}", message),
-			Err(error) => panic!("AWS SQS Error: Can't post at queue, {:?}", error),
+			Ok(message) => info!("AWS SQS Success: Sent message {:?}.", message),
+			Err(error) => panic!("AWS SQS Error: Can't post at queue, {}.", error),
 		}
 
 		// Return acknowledgement

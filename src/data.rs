@@ -1,5 +1,3 @@
-//use time::PreciseTime;
-//use rustc_serialize::json::{self, ToJson, Json};
 use std::str::FromStr;
 
 pub enum EquipmentType {
@@ -18,12 +16,3 @@ impl FromStr for EquipmentType {
 		}
 	}
 }
-
-/*
-#[derive(RustcEncodable)]
-struct SQSPacket {
-	date: PreciseTime,
-	equip_type: EquipmentType,
-	raw: String,
-}
-*/

@@ -13,6 +13,9 @@ tokio = { git = "https://github.com/tokio-rs/tokio" }
 psvr_line = { git = "ssh://APKAIUBMOHEAW6LYNL3Q@git-codecommit.us-east-1.amazonaws.com/v1/repos/psvr_line", branch = "develop"}
 futures = "0.1.0"
 clap = "2.10.0"
+slog = "*"
+slog-term = "0.7.0"
+slog-stdlog = "0.7.0"
 
 
 rustc-serialize = "0.3"
